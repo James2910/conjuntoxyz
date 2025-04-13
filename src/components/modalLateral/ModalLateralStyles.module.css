@@ -1,0 +1,73 @@
+.container {
+    height: 100%;
+    max-width: 400px;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 90px 35px 20px 35px;
+}
+
+.iconContainer {
+    width: 7cqmin;
+    aspect-ratio: 1;
+    background-color: #212529;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+.icon {
+    font-size: 40px;
+}
+
+.sectionsContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+}
+
+.sectionItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: solid 1px #7f5539;
+    height: 50px;
+}
+
+.optionText {
+    color: #212529;
+    font-weight: 600;
+    font-size: 25px;
+}
+
+.optionIcon {
+    color: #212529;
+    font-size: 30px;
+    margin-right: 5px;
+}
+
+/* Para que se active la animacion cuando el evento hover del item se dispare */
+.sectionItem:hover .optionIcon {
+    transform: translateX(10px);
+    transition: transform 0.5s ease;
+}
+
+.socialMediaContainer {
+    width: 100%;
+    position: absolute;
+    bottom: 60px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.mediaIcon {
+    color: #212529;
+    font-size: 30px;
+    margin-right: 5px;
+    cursor: pointer;
+}

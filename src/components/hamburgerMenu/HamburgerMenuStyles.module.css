@@ -1,0 +1,207 @@
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    left: 40px;
+    top: 40px;
+    z-index: 2;
+}
+
+.button {
+    position: relative;
+    width: 30px;
+    height: 20px;
+    border: none;
+    background: transparent;
+    outline: none;
+    box-shadow: none;
+    cursor: pointer;
+    transition: transform 0.5s ease;
+}
+
+.button div,
+.button:before,
+.button:after {
+    content: "";
+    position: absolute;
+    background: #fefefe;
+    height: 2px;
+    border-radius: 3px;
+    width: 100%;
+    transition: transform 0.5s, opacity 0.5s;
+    left: 0;
+}
+
+.button:focus,
+.button:active {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Línea superior */
+.button:before {
+    top: 0;
+    transform-origin: center;
+}
+
+/* Línea central */
+.button div {
+    top: 50%;
+    transform: translateY(-50%);
+    transform-origin: center;
+}
+
+/* Línea inferior */
+.button:after {
+    bottom: 0;
+    transform-origin: center;
+}
+
+/* Estado abierto */
+.button.open:before {
+    transform: translateY(9px) rotate(135deg);
+}
+
+.button.open:after {
+    transform: translateY(-9px) rotate(-135deg);
+}
+
+.button.open div {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.moveAndRotate {
+    transform: translateX(250px) rotate(360deg); /* Puedes ajustar la distancia */
+    transition: transform 0.5s ease;
+}
+
+.darkLines div,
+.darkLines:before,
+.darkLines:after {
+  background: #212529 !important; /* Color oscuro para el fondo blanco del modal */
+}
+
+.modalContainer {
+    height: 100%;
+    width: 350px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #fefefe;
+    z-index: 1;
+    transition: transform 0.5s ease, right 0.3s ease;
+    opacity: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.modalContainer.isOpen {
+    animation: modalOpen 0.5s ease forwards;
+}
+
+.modalContainer.isClose {
+    animation: modalClose 0.5s ease forwards;
+}
+
+.modalHeader {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+    opacity: 1;
+}
+
+.modalContent {
+    padding: 10px;
+}
+
+.modalItem {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    background-color: "#fefefe";
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    color: var(--black2);
+    text-align: left;
+}
+
+.modalItemText {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+
+
+
+
+
+
+@keyframes buttonOpen {
+    from{
+        background-color: #fefefe;
+    }
+    to {
+        background-color: #212529;
+    }
+}
+
+@keyframes buttonClosed {
+    from{
+        background-color: #212529;
+    }
+    to {
+        background-color: #fefefe;
+    }
+}
+
+@keyframes modalOpen {
+    from{
+        transform: translateX(-100%) scale(1);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes modalClose {
+    from{
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(-100%) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes modalPurchaseOpen {
+    from{
+        transform: translateX(100%) scale(1);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes modalPurchaseClose {
+    from{
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%) scale(1);
+        opacity: 0;
+    }
+}
+
