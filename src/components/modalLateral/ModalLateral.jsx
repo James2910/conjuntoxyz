@@ -3,20 +3,35 @@ import styles from './ModalLateralStyles.module.css'
 import { PiBuildingFill } from "react-icons/pi";
 import { RiArrowRightSFill } from "react-icons/ri";
 import { FaFacebook, FaInstagramSquare, FaTiktok } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleModal, setActiveOption } from "../../redux/hambugerMenu/HamburgerSlice"
 
 
 export const ModalLateral = () => {
+    const navigate = useNavigate();
+
+    const dispatch = useDispatch();
+    const { activeOption } = useSelector(state => state.hamburger);
+
+
     const indexes = [
         {
-            name: "Inicio"
+            name: "Inicio", link: "/", optionIndex: 1
         },
         {
-            name: "Facturas"
+            name: "Facturas", link: "/", optionIndex: 2
         },
         {
-            name: "Residentes"
+            name: "Residentes", link: "/users", optionIndex: 3
         },
     ];
+
+    const handleNavigation = (option) => {
+        dispatch(toggleModal());
+        navigate(option.link);
+        dispatch(setActiveOption(option.optionIndex));
+    }
 
     return (
         <div className={styles.container}>
@@ -26,7 +41,7 @@ export const ModalLateral = () => {
 
             <div className={styles.sectionsContainer}>
                 {indexes.map((option, index) => (
-                    <div key={index} className={styles.sectionItem}>
+                    <div key={index} className={activeOption == option.optionIndex ? styles.activeSectionItem : styles.sectionItem} onClick={() => handleNavigation(option)}>
                         <p className={styles.optionText}>{option.name}</p>
                         <RiArrowRightSFill className={styles.optionIcon} />
                     </div>

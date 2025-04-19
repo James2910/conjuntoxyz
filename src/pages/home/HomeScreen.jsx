@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './HomeStyles.module.css'
 import { HamburgerMenu } from '../../components/hamburgerMenu/HamburgerMenu'
 import { PiBuildingFill } from "react-icons/pi";
+import { useSelector } from 'react-redux';
 
 
 export const HomeScreen = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false)
+    const { open } = useSelector(state => state.hamburger);
+
     const [inputValue, setInputValue] = useState("");
     const opciones = ["Manzana", "Pera", "Banano", "Durazno", "Mandarina"];
     const opcionesFiltradas = opciones.filter(op =>
@@ -15,10 +17,10 @@ export const HomeScreen = () => {
     return (
         <div className={styles.mainContainer}>
             <div className={styles.HamburguerMenuContainer}>
-                <HamburgerMenu setIsModalOpen={setIsModalOpen} />
+                <HamburgerMenu />
             </div>
             
-            <div className={`${styles.container} ${isModalOpen ? styles.shifted : ''}`}>
+            <div className={`${styles.container} ${open ? styles.shifted : ''}`}>
                 <div className={styles.iconContainer}>
                     <PiBuildingFill className={styles.icon} />
                 </div>

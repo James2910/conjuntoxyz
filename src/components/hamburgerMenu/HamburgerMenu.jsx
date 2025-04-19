@@ -1,26 +1,24 @@
-import React from 'react'
 import styles from './HamburgerMenuStyles.module.css';
-import { useHamburguerMenu } from '../../hooks/HamburgerMenu.hook';
 import { ModalLateral } from '../modalLateral/ModalLateral';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleModal } from "../../redux/hambugerMenu/HamburgerSlice"
 
-export const HamburgerMenu = ({ setIsModalOpen }) => {
-    const {
-        isOpen, 
-        toggleModal,
-    } = useHamburguerMenu();
+export const HamburgerMenu = ({left = '40px', top = '40px'}) => {
+    const dispatch = useDispatch();
+    const { open } = useSelector(state => state.hamburger);
     
     return (
         <div>
-            <div className={styles.buttonContainer}>
+            <div className={styles.buttonContainer} style={{left, top}}>
                 <button 
-					className={`${styles.button} ${isOpen ? `${styles.open} ${styles.moveAndRotate} ${styles.darkLines}` : styles.closed}`}
-					onClick={() => {toggleModal(); setIsModalOpen(!isOpen)}}
-				>
+                    className={`${styles.button} ${open ? `${styles.open} ${styles.moveAndRotate} ${styles.darkLines}` : ''}`}
+                    onClick={() => dispatch(toggleModal())}
+                >
                     <div></div>
                 </button>
             </div>
 
-            <div className={` ${isOpen ? `${styles.modalContainer} ${styles.isOpen}`.trim() : `${styles.modalContainer} ${styles.isClose}`.trim()} `}>
+            <div className={` ${open ? `${styles.modalContainer} ${styles.isOpen}`.trim() : `${styles.modalContainer} ${styles.isClose}`.trim()} `}>
                 <ModalLateral />
             </div>
         </div>

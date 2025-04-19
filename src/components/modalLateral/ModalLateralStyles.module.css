@@ -10,7 +10,8 @@
 }
 
 .iconContainer {
-    width: 7cqmin;
+    width: auto;
+    padding: 15px;
     aspect-ratio: 1;
     background-color: #212529;
     border-radius: 100%;
@@ -31,12 +32,22 @@
     gap: 10px;
 }
 
+.activeSectionItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: solid 1px #7f5539;
+    background-color: #f0f0f0;
+    height: 50px;
+}
+
 .sectionItem {
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: solid 1px #7f5539;
     height: 50px;
+    cursor: pointer;
 }
 
 .optionText {
