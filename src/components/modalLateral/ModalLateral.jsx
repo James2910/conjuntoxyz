@@ -20,7 +20,7 @@ export const ModalLateral = () => {
             name: "Inicio", link: "/", optionIndex: 1
         },
         {
-            name: "Facturas", link: "/", optionIndex: 2
+            name: "Facturas", link: "/bills", optionIndex: 2
         },
         {
             name: "Residentes", link: "/users", optionIndex: 3
