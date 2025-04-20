@@ -30,13 +30,19 @@ export const UserScreen = () => {
         estadoID: (i % opciones.length) + 1
     }));
 
-    const datosFiltrados = filtro
+    let datosFiltrados = filtro
         ? datos.filter(d => d.estadoID === filtro)
         : datos;
 
     const toggleModalFilter = () => {
         setModalFilterOpen(!modalFilterOpen);
     }
+
+    const clearFilter = () => {
+        setFiltro(null);
+        setActiveFilter(0);
+    };
+    
 
     return (
         <div className={styles.container}>
@@ -51,16 +57,18 @@ export const UserScreen = () => {
             </div>
             <div className={styles.body}>
                 <div className={styles.leftBar}>
-                    <div className={styles.filterContainer} onClick={toggleModalFilter}>
-                        <div style={{ position: "relative" }}>
-                            <IoFilter className={styles.filterIcon} />
+                    <div className={styles.filterContainer}>
+                        <div style={{ position: "relative", width: 'auto', height: 'auto' }}>
+                            <IoFilter className={styles.filterIcon} onClick={toggleModalFilter} />
                             {activeFilter !== 0 && (
                                 <div className={styles.floatNumberContainer}><p className={styles.floatNumber}>1</p></div>
                             )}
                         </div>
                         <p className={styles.filterText}>Filtrar...</p>
                         <div className={styles.innerSpace} />
-                        <FaFilterCircleXmark className={styles.filterIcon} />
+                        {activeFilter !== 0 && (
+                            <FaFilterCircleXmark className={styles.filterIcon} onClick={clearFilter} />
+                        )}
                     </div>
                     {opciones.map((opcion, index) => (
                         <div key={index} className={styles.optionItem}>
