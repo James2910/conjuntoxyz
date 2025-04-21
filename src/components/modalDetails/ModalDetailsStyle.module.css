@@ -1,0 +1,96 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    overflow: hidden;
+}
+
+.modalContainer {
+    position: relative;
+    width: 90vw;
+    height: 90vh;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    overflow: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px 0 20px;
+    background-color: #001d3d;
+    height: clamp(100px, 300px, 15%);
+    margin-bottom: 0;
+}
+
+.userHeader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+}
+
+.userIcon {
+    font-size: clamp(25px, 40px, 60px);
+}
+
+.userInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: fit-content;
+}
+
+.userTopInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    height: fit-content;
+    margin-bottom: 8px;
+}
+
+.userInfo, .userTopInfo p {
+    margin: 0;
+    line-height: 1;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.closeButton:focus {
+    outline: none;
+}
+
+.modalBody {
+    padding: 0 20px 20px 20px;
+    overflow-y: auto;
+    flex-grow: 1;
+    margin-top: 0;
+}
+
+  
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}

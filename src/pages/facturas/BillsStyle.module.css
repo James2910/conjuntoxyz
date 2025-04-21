@@ -200,4 +200,62 @@
     border-bottom: 1px solid #ccc;
     color: #212529;
 }
+
+
+/* Estilos children para detalles de factura */
+.codFactura {
+    width: fit-content;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+.codFactura h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #212529;
+    font-weight: 600;
+}
+
+/* Estilos tabla */
+.billTable {
+    margin-top: 20px;
+    width: 100%;
+    overflow-x: auto;
+}
   
+.billTable table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f5f0ec;
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: inherit;
+}
+  
+.billTable th {
+    background-color: #a58b79;
+    color: white;
+    padding: 10px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+  
+.billTable td {
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    font-size: 0.95rem;
+    color: #333;
+}
+  
+.billTable tr:nth-child(even) {
+    background-color: #e8e0d9;
+}
+
+.totalFactura {
+    margin-top: 20px;
+    text-align: right;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4a2e1e;
+}
