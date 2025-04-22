@@ -9,6 +9,7 @@ export const RoutesApp = () => {
       <Routes>
         <Route path="/" element={ <HomeScreen /> } />
         <Route path="/users" element={ <UserScreen /> } />
+        <Route path="/usuario/:id" element={<UserScreen />} />
         <Route path="/bills" element={ <BillsScreen /> } />
       </Routes>
     </BrowserRouter>

@@ -132,10 +132,11 @@
 
 .tableContainer {
     padding-top: 25px;
-    max-height: clamp(600px, 1000px, 1200px);
+    max-height: clamp(400px, 600px, 100%);
     display: flex;
     flex: 1;
     justify-content: center;
+    align-items: flex-start;
     overflow-y: auto;
     scrollbar-width: thin; /* Para Firefox */
     scrollbar-color: #7f5539 #f2e6df; /* thumb y track para Firefox */
@@ -178,6 +179,13 @@
     background-color: #7f5539;
     color: #fff;
 }
+
+.tableRow {
+    height: 60px; /* Altura fija */
+    max-height: 60px; /* También puedes usar min-height si quieres asegurar un mínimo */
+    vertical-align: middle; /* Centrar contenido verticalmente */
+}
+  
   
 .table tbody tr:nth-child(odd) {
     background-color: #ffffff; /* blanco */

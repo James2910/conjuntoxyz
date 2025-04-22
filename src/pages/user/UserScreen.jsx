@@ -3,11 +3,32 @@ import { HamburgerMenu } from '../../components/hamburgerMenu/HamburgerMenu';
 import { PiBuildingFill } from "react-icons/pi";
 import { IoFilter } from "react-icons/io5";
 import { ModalFilter } from '../../components/modalFilter/ModalFilter';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaFilterCircleXmark } from "react-icons/fa6";
 import { ModalDetails } from '../../components/modalDetails/modalDetails';
+import { useDispatch, useSelector } from 'react-redux';
+import { getResidentes } from '../../redux/home/HomeSlice';
+import { getFacturas } from '../../redux/facturas/BillsSlice';
+import { useParams } from 'react-router-dom';
+
 
 export const UserScreen = () => {
+    const dispatch = useDispatch();
+    const residentes = useSelector(state => state.home.residentes);
+    const { open } = useSelector(state => state.hamburger);
+    const facturas = useSelector(state => state.bills.data);
+
+
+    useEffect(() => {
+        dispatch(getResidentes({
+          idResidente: '',
+          nombre: '',
+          indicadorAlDia: false,
+          indicadorPendientes: false,
+          indicadorMora: false,
+        }));
+    }, [dispatch]);
+
     const [filtro, setFiltro] = useState(null);
     const [modalFilterOpen, setModalFilterOpen] = useState(false);
     const [activeFilter, setActiveFilter] = useState(0);
@@ -17,10 +38,21 @@ export const UserScreen = () => {
     const [modalFilterOpenByUser, setModalFilterOpenByUser] = useState(false);
 
     const opciones = [
-        { id: 1, name: "Al día", color: "#52b788" },
-        { id: 2, name: "Pendientes", color: "#ffb703" },
-        { id: 3, name: "En mora", color: "#d90429" },
+        { id: "1", name: "Al día", color: "#52b788" },
+        { id: "2", name: "Pendientes", color: "#ffb703" },
+        { id: "3", name: "En mora", color: "#d90429" },
     ]; 
+
+    const handleSelectUser = (residente) => {
+        setSelectedUser(residente);
+        dispatch(getFacturas({
+            idResidente: residente.idResidente, // o algún ID si quieres filtrar por residente
+            indicadorAlDia: false,
+            indicadorPendientes: false,
+            indicadorMora: false,
+        }));
+    };
+      
 
     const nombres = [
         "Ana Rodríguez", "Carlos Pérez", "Luisa Gómez", "Miguel Torres", "Sofía Martínez",
@@ -50,9 +82,10 @@ export const UserScreen = () => {
     const toggleModalFilter = () => setModalFilterOpen(!modalFilterOpen);
     const clearFilter = () => { setFiltro(null); setActiveFilter(0); };
 
-    const toggleModalFilterByUser = () => setModalFilterOpen(!modalFilterOpenByUser);
+    const toggleModalFilterByUser = () => setModalFilterOpenByUser(!modalFilterOpenByUser);
     const clearFilterByUser = () => { setFiltroByUser(null); setActiveFilterByUser(0); };
     const closeUserModal = () => setSelectedUser(null);
+
 
     return (
         <div className={styles.container}>
@@ -92,22 +125,20 @@ export const UserScreen = () => {
                         <thead>
                             <tr>
                                 <th>Nombre</th>
-                                <th>Fecha de Emisión</th>
                                 <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {datosFiltrados.map((dato, index) => {
-                                const opcion = opciones.find(opt => opt.id === dato.estadoID);
+                            {residentes.map((res, index) => {
+                                const opcion = opciones.find(opt => opt.id === res.numEstado);
                                 return (
                                     <tr
-                                        key={index}
+                                        key={res.idResidente}
                                         className={index % 2 === 0 ? 'fila-par' : 'fila-impar'}
                                         style={{ cursor: 'pointer' }}
-                                        onClick={() => setSelectedUser(dato)}
+                                        onClick={() => handleSelectUser(res)}
                                     >
-                                        <td>{dato.nombre}</td>
-                                        <td>{dato.fecha}</td>
+                                        <td>{res.nombreCompleto}</td>
                                         <td style={{ color: opcion?.color || '#000' }}>{opcion?.name || 'Desconocido'}</td>
                                     </tr>
                                 );
@@ -124,7 +155,7 @@ export const UserScreen = () => {
                     />
                 )}
             </div>
-
+            
             {selectedUser && (
                 <ModalDetails onClose={closeUserModal} bill={selectedUser}>
                     <div className={styles.modalChildren}>
@@ -132,13 +163,13 @@ export const UserScreen = () => {
                             <div className={styles.filterContainer}>
                                 <div style={{ position: "relative", width: 'auto', height: 'auto' }}>
                                     <IoFilter className={styles.filterIcon} onClick={toggleModalFilterByUser} />
-                                    {activeFilter !== 0 && (
+                                    {activeFilterByUser !== 0 && (
                                         <div className={styles.floatNumberContainer}><p className={styles.floatNumber}>1</p></div>
                                     )}
                                 </div>
                                 <p className={styles.filterText}>Filtrar...</p>
                                 <div className={styles.innerSpace} />
-                                {activeFilter !== 0 && (
+                                {activeFilterByUser !== 0 && (
                                     <FaFilterCircleXmark className={styles.filterIcon} onClick={clearFilterByUser} />
                                 )}
                             </div>
@@ -159,16 +190,15 @@ export const UserScreen = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {(filtroByUser
-                                        ? selectedUser.facturas.filter(f => f.estadoID === filtroByUser)
-                                        : selectedUser.facturas
-                                    ).map((factura, index) => {
-                                        const estado = opciones.find(opt => opt.id === factura.estadoID);
+                                    {facturas
+                                    .filter(factura => !filtroByUser || factura.numEstado === filtroByUser)
+                                    .map((factura, index) => {
+                                        const opcion = opciones.find(opt => opt.id === factura.numEstado);
                                         return (
-                                            <tr key={index}>
+                                            <tr key={factura.codigo} className={index % 2 === 0 ? 'fila-par' : 'fila-impar'}>
                                                 <td>{factura.codigo}</td>
-                                                <td>{factura.fecha}</td>
-                                                <td style={{ color: estado?.color }}>{estado?.name}</td>
+                                                <td>{factura.fechaVencimiento}</td>
+                                                <td style={{ color: opcion?.color || '#000' }}>{opcion?.name || 'Desconocido'}</td>
                                             </tr>
                                         );
                                     })}

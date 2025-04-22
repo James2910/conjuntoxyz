@@ -94,6 +94,10 @@
 }
 
 .optionItem {
+    display: flex;
+    justify-content: space-between; /* antes era flex-start */
+    align-items: center;
+    padding: 8px 12px;
     cursor: pointer;
     border-bottom: solid 1px #212529;
     transition: background 0.2s ease;
@@ -107,3 +111,13 @@
     color: #212529;
     margin-bottom: 5px;
 }
+
+.optionName {
+    color: #212529;
+}
+
+.optionVivienda {
+    color: #212529;
+    margin-left: 16px;
+}
+  

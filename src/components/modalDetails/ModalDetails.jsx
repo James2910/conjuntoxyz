@@ -13,10 +13,13 @@ export const ModalDetails = ({ onClose, bill, children }) => {
                         <FaUser className={styles.userIcon} />
                         <div className={styles.userInfo}>
                             <div className={styles.userTopInfo}>
-                                <p>{bill.nombre}</p>
-                                <p>{bill.apto}</p>
+                                <p>{`${bill?.nombreResidente || bill?.nombreCompleto}`}</p>
+                                <p>
+                                    {`${bill.residente?.tipoVivienda || bill.tipoVivienda} - ${bill.residente?.numeroVivienda || bill.numeroVivienda}`}
+                                </p>
+
                             </div>
-                            <p>Tel. {bill.telefono}</p>
+                            <p>{`${bill.residente?.codigoTipoDocumento || bill.codigoTipoDocumento}. ${bill.numeroDocumentoResidente || bill.numeroDocumento}`}</p>
                         </div>
                     </div>
                     <button className={styles.closeButton} onClick={onClose}>✖</button>
