@@ -3,7 +3,7 @@ import { HamburgerMenu } from '../../components/hamburgerMenu/HamburgerMenu';
 import { PiBuildingFill } from "react-icons/pi";
 import { IoFilter } from "react-icons/io5";
 import { ModalFilter } from '../../components/modalFilter/ModalFilter';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaFilterCircleXmark } from "react-icons/fa6";
 import { ModalDetails } from '../../components/modalDetails/modalDetails';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,16 +18,24 @@ export const UserScreen = () => {
     const { open } = useSelector(state => state.hamburger);
     const facturas = useSelector(state => state.bills.data);
 
+    const { id } = useParams();
+    const wasAutoOpened = useRef(false);
 
     useEffect(() => {
-        dispatch(getResidentes({
-          idResidente: '',
-          nombre: '',
-          indicadorAlDia: false,
-          indicadorPendientes: false,
-          indicadorMora: false,
-        }));
-    }, [dispatch]);
+        if (!wasAutoOpened.current && id && residentes.length > 0) {
+            const usuario = residentes.find(res => res.idResidente === id);
+            if (usuario) {
+                setSelectedUser(usuario);
+                dispatch(getFacturas({
+                idResidente: usuario.idResidente,
+                indicadorAlDia: false,
+                indicadorPendientes: false,
+                indicadorMora: false,
+                }));
+                wasAutoOpened.current = true; // marcamos como abierto
+            }
+        }
+      }, [id, residentes, dispatch]);
 
     const [filtro, setFiltro] = useState(null);
     const [modalFilterOpen, setModalFilterOpen] = useState(false);
