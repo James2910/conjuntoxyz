@@ -45,9 +45,6 @@ export const BillsScreen = () => {
         ? facturas.filter(f => f.numEstado === filtro)
         : facturas;
 
-    const handleClickFactura = (idFactura, idResidente) => {
-        dispatch(getDetallesFacturaConResidente({ idFactura, idResidente }));
-    };
 
     const toggleModalFilter = () => {
         setModalFilterOpen(!modalFilterOpen);
@@ -123,29 +120,29 @@ export const BillsScreen = () => {
                             </tr>
                         </thead>
                         <tbody>
-                        {facturasFiltradas.map((factura, index) => {
+                            {facturasFiltradas.map((factura, index) => {
                                 const opcion = opciones.find(opt => opt.id === factura.numEstado);
 
                                 return (
-                                <tr
-                                    key={factura.id}
-                                    className={`${styles.tableRow}`}
-                                    onClick={() => {
-                                        setFacturaSeleccionada(factura);
-                                        setResidenteSeleccionadoId(factura.idResidente);
-                                        dispatch(getDetallesFacturaConResidente({
-                                          idFactura: factura.idFactura,
-                                          idResidente: factura.idResidente,
-                                        }));
-                                    }}
-                                    style={{ cursor: 'pointer' }}
-                                >
-                                    <td>{factura.codigo}</td>
-                                    <td>{new Date(factura.fechaVencimiento).toLocaleDateString()}</td>
-                                    <td style={{ color: opcion?.color || '#000' }}>
-                                    {opcion?.name || 'Desconocido'}
-                                    </td>
-                                </tr>
+                                    <tr
+                                        key={factura.id}
+                                        className={`${styles.tableRow}`}
+                                        onClick={() => {
+                                            setFacturaSeleccionada(factura);
+                                            setResidenteSeleccionadoId(factura.idResidente);
+                                            dispatch(getDetallesFacturaConResidente({
+                                            idFactura: factura.idFactura,
+                                            idResidente: factura.idResidente,
+                                            }));
+                                        }}
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        <td>{factura.codigo}</td>
+                                        <td>{new Date(factura.fechaVencimiento).toLocaleDateString()}</td>
+                                        <td style={{ color: opcion?.color || '#000' }}>
+                                        {opcion?.name || 'Desconocido'}
+                                        </td>
+                                    </tr>
                                 );
                             })}
                         </tbody>

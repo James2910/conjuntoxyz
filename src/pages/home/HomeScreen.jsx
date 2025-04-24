@@ -28,14 +28,18 @@ export const HomeScreen = () => {
 
     const opciones = residentes.map(r => ({
         id: r.idResidente,
-        nombreCompleto: r.nombreCompleto,
-        vivienda: `${r.tipoVivienda} - ${r.numeroVivienda}`
+        nombreResidente: r.nombreCompleto,
+        vivienda: `${r.tipoVivienda} - ${r.numeroVivienda}`,
+        tipoVivienda: r.tipoVivienda,
+        numeroVivienda: r.numeroVivienda,
+        codigoTipoDocumento: r.codigoTipoDocumento,
+        numeroDocumento: r.numeroDocumento,
     }));
 
     const opcionesFiltradas = opciones.filter(op =>
-        op.nombreCompleto.toLowerCase().includes(inputValue.toLowerCase())
+        op.nombreResidente.toLowerCase().includes(inputValue.toLowerCase())
     );
-
+    
     return (
         <div className={styles.mainContainer}>
             <div className={styles.HamburguerMenuContainer}>
@@ -62,10 +66,10 @@ export const HomeScreen = () => {
                             <div
                                 key={op.id}
                                 className={styles.optionItem}
-                                onClick={() => navigate(`/usuario/${op.idResidente}`)}
+                                onClick={() => navigate('/users', { state: { op } })}
                             >
                                 <span className={styles.optionName}>
-                                    {op.nombreCompleto}
+                                    {op.nombreResidente}
                                 </span>
                                 <span className={styles.optionVivienda}>
                                     {op.vivienda}

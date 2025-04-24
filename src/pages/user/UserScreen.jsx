@@ -9,25 +9,25 @@ import { ModalDetails } from '../../components/modalDetails/modalDetails';
 import { useDispatch, useSelector } from 'react-redux';
 import { getResidentes } from '../../redux/home/HomeSlice';
 import { getFacturas } from '../../redux/facturas/BillsSlice';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 
 export const UserScreen = () => {
     const dispatch = useDispatch();
     const residentes = useSelector(state => state.home.residentes);
-    const { open } = useSelector(state => state.hamburger);
     const facturas = useSelector(state => state.bills.data);
+    const detalles = useSelector((state) => state.bills.detalles);
 
-    const { id } = useParams();
+    const location = useLocation();
     const wasAutoOpened = useRef(false);
 
     useEffect(() => {
-        if (!wasAutoOpened.current && id && residentes.length > 0) {
-            const usuario = residentes.find(res => res.idResidente === id);
-            if (usuario) {
-                setSelectedUser(usuario);
+        if (!wasAutoOpened.current && residentes.length > 0) {
+            const userFromState = location.state?.op;
+            if (userFromState) {
+                setSelectedUser(userFromState);
                 dispatch(getFacturas({
-                idResidente: usuario.idResidente,
+                idResidente: userFromState.id,
                 indicadorAlDia: false,
                 indicadorPendientes: false,
                 indicadorMora: false,
@@ -35,15 +35,21 @@ export const UserScreen = () => {
                 wasAutoOpened.current = true; // marcamos como abierto
             }
         }
-      }, [id, residentes, dispatch]);
+      }, [location, residentes, dispatch]);
 
     const [filtro, setFiltro] = useState(null);
     const [modalFilterOpen, setModalFilterOpen] = useState(false);
     const [activeFilter, setActiveFilter] = useState(0);
+
     const [selectedUser, setSelectedUser] = useState(null);
     const [filtroByUser, setFiltroByUser] = useState(null);
     const [activeFilterByUser, setActiveFilterByUser] = useState(0);
     const [modalFilterOpenByUser, setModalFilterOpenByUser] = useState(false);
+    
+    const [selectedUserBill, setSelectedUserBill] = useState(null);
+    const [filtroByUserBill, setFiltroByUserBill] = useState(null);
+    const [activeFilterByUserBill, setActiveFilterByUserBill] = useState(0);
+    const [modalFilterOpenByUserBill, setModalFilterOpenByUserBill] = useState(false);
 
     const opciones = [
         { id: "1", name: "Al día", color: "#52b788" },
@@ -54,38 +60,16 @@ export const UserScreen = () => {
     const handleSelectUser = (residente) => {
         setSelectedUser(residente);
         dispatch(getFacturas({
-            idResidente: residente.idResidente, // o algún ID si quieres filtrar por residente
+            idResidente: residente.idResidente, // filtrar por residente
             indicadorAlDia: false,
             indicadorPendientes: false,
             indicadorMora: false,
         }));
     };
-      
 
-    const nombres = [
-        "Ana Rodríguez", "Carlos Pérez", "Luisa Gómez", "Miguel Torres", "Sofía Martínez",
-        "Juan Ramírez", "Valentina Ruiz", "Javier Morales", "Camila Herrera", "Diego Vargas"
-    ];
-
-    const generateFacturas = (nombre) => {
-        const cantidad = Math.floor(Math.random() * 5) + 1;
-        return Array.from({ length: cantidad }, (_, i) => ({
-            codigo: `FAC-${nombre.slice(0, 3).toUpperCase()}-${(i + 1).toString().padStart(3, '0')}`,
-            fecha: `2025-04-${(i % 30 + 1).toString().padStart(2, '0')}`,
-            estadoID: (i % 3) + 1
-        }));
-    };
-
-    const datos = nombres.map((nombre, i) => ({
-        nombre,
-        fecha: `2025-04-${(i % 30 + 1).toString().padStart(2, '0')}`,
-        estadoID: (i % opciones.length) + 1,
-        facturas: generateFacturas(nombre)
-    }));
-
-    const datosFiltrados = filtro
-        ? datos.filter(d => d.estadoID === filtro)
-        : datos;
+    const residentesFiltrados = filtro
+        ? residentes.filter(r => r.estadoID === filtro)
+        : residentes;
 
     const toggleModalFilter = () => setModalFilterOpen(!modalFilterOpen);
     const clearFilter = () => { setFiltro(null); setActiveFilter(0); };
@@ -93,7 +77,12 @@ export const UserScreen = () => {
     const toggleModalFilterByUser = () => setModalFilterOpenByUser(!modalFilterOpenByUser);
     const clearFilterByUser = () => { setFiltroByUser(null); setActiveFilterByUser(0); };
     const closeUserModal = () => setSelectedUser(null);
+    
+    const closeUserBillModal = () => setSelectedUserBill(null);
+    
 
+    console.log(selectedUser)
+    console.log(selectedUserBill);
 
     return (
         <div className={styles.container}>
@@ -137,20 +126,28 @@ export const UserScreen = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {residentes.map((res, index) => {
-                                const opcion = opciones.find(opt => opt.id === res.numEstado);
-                                return (
-                                    <tr
-                                        key={res.idResidente}
-                                        className={index % 2 === 0 ? 'fila-par' : 'fila-impar'}
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={() => handleSelectUser(res)}
-                                    >
-                                        <td>{res.nombreCompleto}</td>
-                                        <td style={{ color: opcion?.color || '#000' }}>{opcion?.name || 'Desconocido'}</td>
-                                    </tr>
-                                );
-                            })}
+                            {residentesFiltrados.length === 0 ? (
+                                <tr>
+                                    <td colSpan={2} style={{ textAlign: 'center', padding: '1rem' }}>
+                                        No se encontraron resultados con el estado seleccionado.
+                                    </td>
+                                </tr>
+                            ) : (
+                                residentesFiltrados.map((res, index) => {
+                                    const opcion = opciones.find(opt => opt.id === res.numEstado);
+                                    return (
+                                        <tr
+                                            key={res.idResidente}
+                                            className={index % 2 === 0 ? 'fila-par' : 'fila-impar'}
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => handleSelectUser(res)}
+                                        >
+                                            <td>{res.nombreCompleto}</td>
+                                            <td style={{ color: opcion?.color || '#000' }}>{opcion?.name || 'Desconocido'}</td>
+                                        </tr>
+                                    );
+                                })
+                            )}
                         </tbody>
                     </table>
                 </div>
@@ -198,18 +195,44 @@ export const UserScreen = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {facturas
-                                    .filter(factura => !filtroByUser || factura.numEstado === filtroByUser)
-                                    .map((factura, index) => {
-                                        const opcion = opciones.find(opt => opt.id === factura.numEstado);
-                                        return (
-                                            <tr key={factura.codigo} className={index % 2 === 0 ? 'fila-par' : 'fila-impar'}>
-                                                <td>{factura.codigo}</td>
-                                                <td>{factura.fechaVencimiento}</td>
-                                                <td style={{ color: opcion?.color || '#000' }}>{opcion?.name || 'Desconocido'}</td>
-                                            </tr>
+                                    {(() => {
+                                        const facturasFiltradas = facturas.filter(
+                                            factura => !filtroByUser || factura.numEstado === filtroByUser
                                         );
-                                    })}
+
+                                        if (facturasFiltradas.length === 0) {
+                                            return (
+                                                <tr>
+                                                    <td colSpan={3} style={{ textAlign: 'center', padding: '1rem' }}>
+                                                        No se encontraron facturas con el estado seleccionado.
+                                                    </td>
+                                                </tr>
+                                            );
+                                        }
+
+                                        return facturasFiltradas.map((factura, index) => {
+                                            const opcion = opciones.find(opt => opt.id === factura.numEstado);
+                                            return (
+                                                <tr 
+                                                    key={factura.codigo} 
+                                                    className={index % 2 === 0 ? 'fila-par' : 'fila-impar'}
+                                                    onClick={() => {
+                                                        setSelectedUserBill({
+                                                            ...factura,
+                                                            residente: selectedUser,
+                                                            totalFactura: factura.total,
+                                                        });
+                                                    }}
+                                                >
+                                                    <td>{factura.codigo}</td>
+                                                    <td>{factura.fechaVencimiento}</td>
+                                                    <td style={{ color: opcion?.color || '#000' }}>
+                                                        {opcion?.name || 'Desconocido'}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        });
+                                    })()}
                                 </tbody>
                             </table>
                         </div>
@@ -220,6 +243,38 @@ export const UserScreen = () => {
                                 modalOption={toggleModalFilterByUser}
                             />
                         )}
+                    </div>
+                </ModalDetails>
+            )}
+
+            {/* Modal para detalle de factura por usuario */}
+            {selectedUserBill && (
+                <ModalDetails onClose={closeUserBillModal} bill={selectedUserBill}>
+                    <div className={styles.codFactura}>
+                        <h2>{selectedUserBill.codigo}</h2>
+                    </div>
+                    <div className={styles.billTable}>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Servicio</th>
+                                    <th>Monto</th>
+                                    <th>Descripción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {(detalles[selectedUserBill.idFactura] || []).map((item, index) => (
+                                    <tr key={index}>
+                                    <td>{item.servicio}</td>
+                                    <td>${item.monto.toLocaleString('es-CO')}</td>
+                                    <td>{item.descripcionServicio}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    <div className={styles.totalFactura}>
+                        <strong>Total: </strong>${selectedUserBill.totalFactura.toLocaleString("es-CO")}
+                    </div>
                     </div>
                 </ModalDetails>
             )}

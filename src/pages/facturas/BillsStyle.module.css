@@ -131,15 +131,23 @@
 }
 
 .tableContainer {
-    padding-top: 25px;
-    max-height: clamp(400px, 600px, 100%);
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    align-items: flex-start;
+    margin: auto 0;
     overflow-y: auto;
     scrollbar-width: thin; /* Para Firefox */
     scrollbar-color: #7f5539 #f2e6df; /* thumb y track para Firefox */
+    position: relative;
+    width: 90%;
+    height: fit-content;
+    max-height: 90%;
+    background-color: #fefefe;
+    border-radius: 15px;
+    padding: 20px;
+    overflow: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s ease-in-out; /* thumb y track para Firefox */
 }
 
 /* Estilos para navegadores basados en WebKit */
@@ -164,6 +172,8 @@
 
 .table {
     width: 100%;
+    border-radius: 15px;
+    overflow: hidden;
     border-collapse: collapse;
     font-family: sans-serif;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
@@ -200,12 +210,10 @@
 }
   
 .table td {
-    border-bottom: 1px solid #ccc;
     color: #212529;
 }
-  
+
 .table .stateText {
-    border-bottom: 1px solid #ccc;
     color: #212529;
 }
 
