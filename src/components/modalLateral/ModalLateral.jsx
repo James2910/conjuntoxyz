@@ -17,7 +17,7 @@ export const ModalLateral = () => {
 
     const indexes = [
         {
-            name: "Inicio", link: "/", optionIndex: 1
+            name: "Inicio", link: "/home", optionIndex: 1
         },
         {
             name: "Facturas", link: "/bills", optionIndex: 2

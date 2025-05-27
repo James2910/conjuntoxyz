@@ -8,7 +8,7 @@ import { FaFilterCircleXmark } from "react-icons/fa6";
 import { ModalDetails } from '../../components/modalDetails/modalDetails';
 import { useDispatch, useSelector } from 'react-redux';
 import { getResidentes } from '../../redux/home/HomeSlice';
-import { getFacturas } from '../../redux/facturas/BillsSlice';
+import { getFacturas, getDetallesFacturaConResidente } from '../../redux/facturas/BillsSlice';
 import { useLocation } from 'react-router-dom';
 
 
@@ -47,9 +47,6 @@ export const UserScreen = () => {
     const [modalFilterOpenByUser, setModalFilterOpenByUser] = useState(false);
     
     const [selectedUserBill, setSelectedUserBill] = useState(null);
-    const [filtroByUserBill, setFiltroByUserBill] = useState(null);
-    const [activeFilterByUserBill, setActiveFilterByUserBill] = useState(0);
-    const [modalFilterOpenByUserBill, setModalFilterOpenByUserBill] = useState(false);
 
     const opciones = [
         { id: "1", name: "Al día", color: "#52b788" },
@@ -79,10 +76,6 @@ export const UserScreen = () => {
     const closeUserModal = () => setSelectedUser(null);
     
     const closeUserBillModal = () => setSelectedUserBill(null);
-    
-
-    console.log(selectedUser)
-    console.log(selectedUserBill);
 
     return (
         <div className={styles.container}>
@@ -222,6 +215,11 @@ export const UserScreen = () => {
                                                             residente: selectedUser,
                                                             totalFactura: factura.total,
                                                         });
+
+                                                        dispatch(getDetallesFacturaConResidente({
+                                                            idFactura: factura.idFactura,
+                                                            idResidente: selectedUser.idResidente,
+                                                        }));
                                                     }}
                                                 >
                                                     <td>{factura.codigo}</td>

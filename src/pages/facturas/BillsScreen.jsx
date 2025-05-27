@@ -60,17 +60,20 @@ export const BillsScreen = () => {
     };
 
     useEffect(() => {
-        if (facturaSeleccionada && residenteSeleccionadoId) {
-          const residenteData = residentes[residenteSeleccionadoId];
-          if (residenteData) {
+        if (
+            facturaSeleccionada &&
+            residenteSeleccionadoId &&
+            detalles[facturaSeleccionada.idFactura] &&
+            residentes[residenteSeleccionadoId]
+        ) {
             setSelectedBill({
-              ...facturaSeleccionada,
-              totalFactura: facturaSeleccionada.total,
-              residente: residenteData,
+            ...facturaSeleccionada,
+            totalFactura: facturaSeleccionada.total,
+            residente: residentes[residenteSeleccionadoId],
             });
-          }
         }
-    }, [facturaSeleccionada, residenteSeleccionadoId, residentes]);
+    }, [facturaSeleccionada, residenteSeleccionadoId, detalles, residentes]);
+
       
     
 
@@ -160,7 +163,7 @@ export const BillsScreen = () => {
                 )}
             </div>
         </div>
-        {selectedBill && (
+        {selectedBill && detalles[selectedBill.idFactura] && (
             <ModalDetails onClose={closeBillModal} bill={selectedBill}>
                 <div className={styles.codFactura}>
                 <h2>{selectedBill.codigo}</h2>
