@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getResidentes } from '../../redux/home/HomeSlice';
 import { getFacturas, getDetallesFacturaConResidente } from '../../redux/facturas/BillsSlice';
 import { useLocation } from 'react-router-dom';
+import api from '../../services/api';
+import { setActiveOption } from '../../redux/hambugerMenu/HamburgerSlice';
 
 
 export const UserScreen = () => {
@@ -20,6 +22,23 @@ export const UserScreen = () => {
 
     const location = useLocation();
     const wasAutoOpened = useRef(false);
+
+    useEffect(() => {
+        dispatch(setActiveOption(3));
+    }, [])
+    
+
+    useEffect(() => {
+        if (residentes.length === 0) {
+            dispatch(getResidentes({
+                idResidente: "",
+                nombre: "",
+                indicadorAlDia: false,
+                indicadorPendientes: false,
+                indicadorMora: false,
+            }));
+        }
+    }, [residentes, dispatch]);
 
     useEffect(() => {
         if (!wasAutoOpened.current && residentes.length > 0) {
@@ -35,7 +54,7 @@ export const UserScreen = () => {
                 wasAutoOpened.current = true; // marcamos como abierto
             }
         }
-      }, [location, residentes, dispatch]);
+    }, [location, residentes, dispatch]);
 
     const [filtro, setFiltro] = useState(null);
     const [modalFilterOpen, setModalFilterOpen] = useState(false);
@@ -62,6 +81,36 @@ export const UserScreen = () => {
             indicadorPendientes: false,
             indicadorMora: false,
         }));
+    };
+
+    const handlePayOut = async (idFactura) => {
+        try {
+            const response = await api.get(`/facturas/pago/manual/factura/${idFactura}`);
+
+            if (response.data === true) {
+                alert('Factura marcada como pagada exitosamente.');
+                // Actualizar el estado de la factura en la UI si es necesario
+                dispatch(getFacturas({
+                    idResidente: selectedUser.idResidente, // filtrar por residente
+                    indicadorAlDia: false,
+                    indicadorPendientes: false,
+                    indicadorMora: false,
+                }));
+
+                dispatch(getResidentes({
+                    idResidente: "",
+                    nombre: "",
+                    indicadorAlDia: false,
+                    indicadorPendientes: false,
+                    indicadorMora: false,
+                }));
+            } else {
+                alert('No se pudo marcar la factura como pagada. Por favor, inténtalo de nuevo más tarde.');
+            }
+        } catch (error) {
+            console.error('Error al realizar el pago manual:', error);
+            alert('Hubo un error al marcar la factura como pagada.');
+        }
     };
 
     const residentesFiltrados = filtro
@@ -223,9 +272,28 @@ export const UserScreen = () => {
                                                     }}
                                                 >
                                                     <td>{factura.codigo}</td>
-                                                    <td>{factura.fechaVencimiento}</td>
-                                                    <td style={{ color: opcion?.color || '#000' }}>
-                                                        {opcion?.name || 'Desconocido'}
+                                                    <td>{new Date(factura.fechaVencimiento).toLocaleDateString('es-CO')}</td>
+                                                    <td style={{ color: opcion?.color || '#000', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                        <span>{opcion?.name || 'Desconocido'}</span>
+                                                        {(factura.numEstado === "2" || factura.numEstado === "3") && (
+                                                            <button
+                                                                style={{
+                                                                    backgroundColor: '#52b788',
+                                                                    color: '#fff',
+                                                                    border: 'none',
+                                                                    borderRadius: '5px',
+                                                                    padding: '4px 8px',
+                                                                    cursor: 'pointer',
+                                                                    fontSize: '0.8rem',
+                                                                }}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation(); // Evita que se abra el modal al hacer clic en el botón
+                                                                    handlePayOut(factura.idFactura);
+                                                                }}
+                                                            >
+                                                                Marcar como Al día
+                                                            </button>
+                                                        )}
                                                     </td>
                                                 </tr>
                                             );

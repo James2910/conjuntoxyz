@@ -3,9 +3,11 @@ import styles from './ModalLateralStyles.module.css'
 import { PiBuildingFill } from "react-icons/pi";
 import { RiArrowRightSFill } from "react-icons/ri";
 import { FaFacebook, FaInstagramSquare, FaTiktok } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleModal, setActiveOption } from "../../redux/hambugerMenu/HamburgerSlice"
+import { logout } from '../../redux/auth/AuthSlice';
 
 
 export const ModalLateral = () => {
@@ -33,6 +35,12 @@ export const ModalLateral = () => {
         dispatch(setActiveOption(option.optionIndex));
     }
 
+    const handleLogout = () => {
+        dispatch(toggleModal());
+        dispatch(logout());
+        navigate('/login', { replace: true });
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.iconContainer}>
@@ -47,6 +55,12 @@ export const ModalLateral = () => {
                     </div>
                     )
                 )}
+            </div>
+
+            {/* Cerrar Sesión */}
+            <div className={styles.logoutContainer} onClick={handleLogout}>
+                <FiLogOut className={styles.logoutIcon} />
+                <p className={styles.logoutText}>Cerrar Sesión</p>
             </div>
 
             <div className={styles.socialMediaContainer}>

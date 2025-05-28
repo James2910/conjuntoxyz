@@ -8,19 +8,24 @@ import { FaFilterCircleXmark } from "react-icons/fa6";
 import { ModalDetails } from '../../components/modalDetails/modalDetails';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFacturas, getDetallesFactura, getDetallesFacturaConResidente } from '../../redux/facturas/BillsSlice';
+import { setActiveOption } from '../../redux/hambugerMenu/HamburgerSlice';
 
 
 export const BillsScreen = () => {
     const dispatch = useDispatch();
     
     useEffect(() => {
-      // Cambia los valores según el filtro que necesites aplicar
-      dispatch(getFacturas({
-        idResidente: '', // o algún ID si quieres filtrar por residente
-        indicadorAlDia: false,
-        indicadorPendientes: false,
-        indicadorMora: false,
-      }));
+        dispatch(setActiveOption(2));
+    }, [])
+
+    useEffect(() => {
+        // Cambia los valores según el filtro que necesites aplicar
+        dispatch(getFacturas({
+            idResidente: '', // o algún ID si quieres filtrar por residente
+            indicadorAlDia: false,
+            indicadorPendientes: false,
+            indicadorMora: false,
+        }));
     }, [dispatch]);
 
     const facturas = useSelector((state) => state.bills.data);
@@ -72,9 +77,7 @@ export const BillsScreen = () => {
             residente: residentes[residenteSeleccionadoId],
             });
         }
-    }, [facturaSeleccionada, residenteSeleccionadoId, detalles, residentes]);
-
-      
+    }, [facturaSeleccionada, residenteSeleccionadoId, detalles, residentes]); 
     
 
     return (
@@ -141,7 +144,7 @@ export const BillsScreen = () => {
                                         style={{ cursor: 'pointer' }}
                                     >
                                         <td>{factura.codigo}</td>
-                                        <td>{new Date(factura.fechaVencimiento).toLocaleDateString()}</td>
+                                        <td>{new Date(factura.fechaVencimiento).toLocaleDateString('es-CO')}</td>
                                         <td style={{ color: opcion?.color || '#000' }}>
                                         {opcion?.name || 'Desconocido'}
                                         </td>

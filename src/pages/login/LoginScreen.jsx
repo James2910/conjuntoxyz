@@ -3,8 +3,11 @@ import { PiBuildingFill } from "react-icons/pi";
 import styles from './LoginStyles.module.css';
 import api from '../../services/api';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../../redux/auth/AuthSlice';
+import { useDispatch } from 'react-redux';
 
 export const LoginScreen = () => {
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [user, setUser] = useState('');
 	const [password, setPassword] = useState('');
@@ -23,6 +26,7 @@ export const LoginScreen = () => {
 			const response = await api.post('/usuarios/validarLogin', formData);
 			
 			if (response.data === true) {
+				dispatch(login({ formData }));
 				navigate('/home');
 			} else {
 				setErrorMessage('Usuario o contraseña incorrectos');
